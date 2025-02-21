@@ -1,4 +1,6 @@
 const fs = require('fs');
+const csv = require('csv-parser'); 
+const { Parser } = require('json2csv');
 const logger = require('./logger'); 
 const path = require('path');
 
@@ -225,6 +227,61 @@ function updateStudentProgram(mssv, newProgram) {
     }
 }
 
+function importStudents(filePath) {
+    const students = loadStudents(); 
+    const fileExt = path.extname(filePath).toLowerCase();
+
+    if (!fs.existsSync(filePath)) {
+        console.log(`Lỗi: Không tìm thấy file tại đường dẫn: ${filePath}`);
+        return;
+    }
+
+    if (fileExt === '.json') {
+        try {
+            const data = fs.readFileSync(filePath, 'utf8');
+            const newStudents = JSON.parse(data);
+            students.push(...newStudents);
+            saveStudents(students);
+            console.log(`Đã import ${newStudents.length} sinh viên từ JSON.`);
+        } catch (error) {
+            console.error("Lỗi khi đọc JSON:", error);
+        }
+    } else if (fileExt === '.csv') {
+        const newStudents = [];
+        fs.createReadStream(filePath)
+            .pipe(csv())
+            .on('data', (row) => newStudents.push(row))
+            .on('end', () => {
+                students.push(...newStudents);
+                saveStudents(students);
+                console.log(`Đã import ${newStudents.length} sinh viên từ CSV.`);
+            });
+    } else {
+        console.log("Định dạng file không hỗ trợ (chỉ hỗ trợ .csv và .json).");
+    }
+}
+
+function exportStudents(filePath) {
+    const students = loadStudents(); 
+    const fileExt = path.extname(filePath).toLowerCase();
+
+    if (fileExt === '.json') {
+        fs.writeFileSync(filePath, JSON.stringify(students, null, 2), 'utf8');
+        console.log(`Dữ liệu sinh viên đã được xuất ra JSON: ${filePath}`);
+    } else if (fileExt === '.csv') {
+        try {
+            const parser = new Parser();
+            const csvData = parser.parse(students);
+            fs.writeFileSync(filePath, '\uFEFF' + csvData, 'utf8'); 
+            console.log(`Dữ liệu sinh viên đã được xuất ra CSV: ${filePath}`);
+        } catch (error) {
+            console.error("Lỗi khi xuất CSV:", error.message);
+        }
+    } else {
+        console.log("Định dạng file không hỗ trợ (chỉ hỗ trợ .csv và .json).");
+    }
+}
+
 function main() {
     const readline = require('readline').createInterface({
         input: process.stdin,
@@ -247,7 +304,10 @@ function main() {
 
             console.log("4. Tìm kiếm sinh viên");
             console.log("5. Xem tất cả sinh viên");
-            console.log("6. Thoát");
+
+            console.log("6. Import dữ liệu");
+            console.log("7. Export dữ liệu");
+            console.log("8. Thoát");
 
             const choice = await askQuestion("Lựa chọn: ");
 
@@ -348,12 +408,21 @@ function main() {
                     console.log("Tất cả sinh viên:");
                     console.log(allStudents); 
                     break;
-
+                
                 case '6': 
+                    const importPath = await askQuestion("Nhập đường dẫn file (CSV/JSON): ");
+                    importStudents(importPath);
+                    break;
+
+                case '7': 
+                    const exportPath = await askQuestion("Nhập đường dẫn file lưu (CSV/JSON): ");
+                    exportStudents(exportPath);
+                    break;
+                
+                case '8': 
                     console.log("...Đang thoát");
                     readline.close();
                     return;
-
                 default:
                     console.log("Lựa chọn không hợp lệ");
             }
