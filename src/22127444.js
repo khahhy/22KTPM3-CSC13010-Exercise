@@ -131,15 +131,20 @@ function updateStudent(mssv, updatedStudent) {
 }
 
 
-function searchStudents(searchTerm) {
+function searchStudents(searchTerm, faculty = null) {
     const students = loadStudents();
     const searchTermLower = searchTerm.toLowerCase();
 
-    return students.filter(student =>
-        student.hoTen.toLowerCase().includes(searchTermLower) ||
-        student.mssv.toLowerCase().includes(searchTermLower)
-    );
+    return students.filter(student => {
+        const matchNameOrMSSV = student.hoTen.toLowerCase().includes(searchTermLower) ||
+                                student.mssv.toLowerCase().includes(searchTermLower);
+
+        const matchFaculty = faculty ? student.khoa.toLowerCase() === faculty.toLowerCase() : true;
+
+        return matchNameOrMSSV && matchFaculty;
+    });
 }
+
 
 function updateStudentFaculty(mssv, newFaculty) {
     let students = loadStudents();
@@ -325,15 +330,19 @@ function main() {
                     break;
                 
                 case '4': 
-                    const searchTerm = await askQuestion("Tìm kiếm sinh viên (tên hoặc MSSV): ");
-                    const searchResults = searchStudents(searchTerm);
+                    const searchTerm = await askQuestion("Nhập tên hoặc MSSV (bỏ trống nếu chỉ tìm theo khoa): ");
+                    const faculty = await askQuestion("Nhập khoa (bỏ trống nếu chỉ tìm theo tên/MSSV): ");
+                    
+                    const searchResults = searchStudents(searchTerm, faculty);
+                    
                     if (searchResults.length > 0) {
-                        console.log("Kết quả:");
-                        console.log(searchResults);
+                        console.log("Kết quả tìm kiếm:");
+                        console.table(searchResults); 
                     } else {
-                        console.log("Không sinh viên nào được tìm thấy");
+                        console.log(searchResults);
                     }
                     break;
+                
                  case '5': 
                     const allStudents = loadStudents();
                     console.log("Tất cả sinh viên:");
