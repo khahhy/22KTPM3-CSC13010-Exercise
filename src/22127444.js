@@ -1,7 +1,9 @@
 const fs = require('fs');
 const logger = require('./logger'); 
+const path = require('path');
 
-const file_path = '/src/students.json';
+const file_path = path.join(__dirname, 'students.json');
+
 
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -139,6 +141,85 @@ function searchStudents(searchTerm) {
     );
 }
 
+function updateStudentFaculty(mssv, newFaculty) {
+    let students = loadStudents();
+    let found = false;
+
+    students = students.map(student => {
+        if (student.mssv === mssv) {
+            if (!isValidFaculty(newFaculty)) {
+                console.log("Tên khoa không hợp lệ.");
+                logger.warn(`Cập nhật thất bại: Khoa không hợp lệ (${newFaculty})`);
+                return student;
+            }
+            found = true;
+            logger.info(`Cập nhật MSSV: ${mssv}, Khoa mới: ${newFaculty}`);
+            return { ...student, khoa: newFaculty };
+        }
+        return student;
+    });
+
+    if (found) {
+        saveStudents(students);
+        console.log("Cập nhật khoa thành công!");
+        return true;
+    } else {
+        console.log("Không tìm thấy MSSV.");
+        return false;
+    }
+}
+
+function updateStudentStatus(mssv, newStatus) {
+    let students = loadStudents();
+    let found = false;
+
+    students = students.map(student => {
+        if (student.mssv === mssv) {
+            if (!isValidStudentStatus(newStatus)) {
+                console.log("Tình trạng sinh viên không hợp lệ.");
+                logger.warn(`Cập nhật thất bại: Tình trạng không hợp lệ (${newStatus})`);
+                return student;
+            }
+            found = true;
+            logger.info(`Cập nhật MSSV: ${mssv}, Tình trạng mới: ${newStatus}`);
+            return { ...student, tinhTrang: newStatus };
+        }
+        return student;
+    });
+
+    if (found) {
+        saveStudents(students);
+        console.log("Cập nhật tình trạng sinh viên thành công!");
+        return true;
+    } else {
+        console.log("Không tìm thấy MSSV.");
+        return false;
+    }
+}
+
+function updateStudentProgram(mssv, newProgram) {
+    let students = loadStudents();
+    let found = false;
+
+    students = students.map(student => {
+        if (student.mssv === mssv) {
+            found = true;
+            logger.info(`Cập nhật MSSV: ${mssv}, Chương trình đào tạo mới: ${newProgram}`);
+            return { ...student, chuongTrinh: newProgram };
+        }
+        return student;
+    });
+
+    if (found) {
+        saveStudents(students);
+        console.log("Cập nhật chương trình đào tạo thành công!");
+        return true;
+    } else {
+        console.log("Không tìm thấy MSSV.");
+        return false;
+    }
+}
+
 function main() {
     const readline = require('readline').createInterface({
         input: process.stdin,
@@ -155,6 +236,10 @@ function main() {
             console.log("1. Thêm sinh viên mới");
             console.log("2. Xóa sinh viên");
             console.log("3. Cập nhật thông tin sinh viên");
+            console.log("3.1. Cập nhật khoa sinh viên");
+            console.log("3.2. Cập nhật tình trạng sinh viên");
+            console.log("3.3. Cập nhật chương trình đào tạo");
+
             console.log("4. Tìm kiếm sinh viên");
             console.log("5. Xem tất cả sinh viên");
             console.log("6. Thoát");
@@ -220,7 +305,25 @@ function main() {
                         console.log("Không tìm thấy MSSV");
                     }
                     break;
-
+                
+                    case '3.1': 
+                    const mssvToUpdateFaculty = await askQuestion("Nhập MSSV: ");
+                    const newFaculty = await askQuestion("Nhập khoa mới: ");
+                    updateStudentFaculty(mssvToUpdateFaculty, newFaculty);
+                    break;
+                
+                case '3.2': 
+                    const mssvToUpdateStatus = await askQuestion("Nhập MSSV: ");
+                    const newStatus = await askQuestion("Nhập tình trạng mới: ");
+                    updateStudentStatus(mssvToUpdateStatus, newStatus);
+                    break;
+                
+                case '3.3': 
+                    const mssvToUpdateProgram = await askQuestion("Nhập MSSV: ");
+                    const newProgram = await askQuestion("Nhập chương trình đào tạo mới: ");
+                    updateStudentProgram(mssvToUpdateProgram, newProgram);
+                    break;
+                
                 case '4': 
                     const searchTerm = await askQuestion("Tìm kiếm sinh viên (tên hoặc MSSV): ");
                     const searchResults = searchStudents(searchTerm);
