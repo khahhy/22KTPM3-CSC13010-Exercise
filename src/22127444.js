@@ -282,6 +282,20 @@ function exportStudents(filePath) {
     }
 }
 
+function showVersionHistory() {
+    try {
+        const data = fs.readFileSync(path.join(__dirname, 'version.json'), 'utf8');
+        const history = JSON.parse(data);
+
+        console.log("\nLịch sử version");
+        history.forEach((ver, index) => {
+            console.log(`Lần ${index + 1}: Version ${ver.version} - Ngày build: ${ver.buildDate}`);
+        });
+    } catch (error) {
+        console.error("Lỗi khi đọc lịch sử phiên bản!", error);
+    }
+}
+
 function main() {
     const readline = require('readline').createInterface({
         input: process.stdin,
@@ -307,7 +321,8 @@ function main() {
 
             console.log("6. Import dữ liệu");
             console.log("7. Export dữ liệu");
-            console.log("8. Thoát");
+            console.log("8. Xem phiên bản ứng dụng");
+            console.log("9. Thoát");
 
             const choice = await askQuestion("Lựa chọn: ");
 
@@ -418,8 +433,12 @@ function main() {
                     const exportPath = await askQuestion("Nhập đường dẫn file lưu (CSV/JSON): ");
                     exportStudents(exportPath);
                     break;
-                
-                case '8': 
+
+                case '8':
+                    showVersionHistory();
+                    break;
+
+                case '9': 
                     console.log("...Đang thoát");
                     readline.close();
                     return;
