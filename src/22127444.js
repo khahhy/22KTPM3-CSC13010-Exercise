@@ -1,4 +1,5 @@
 const fs = require('fs');
+const logger = require('./logger'); 
 
 const file_path = '/src/students.json';
 
@@ -39,24 +40,29 @@ function addStudent(student) {
     const students = loadStudents();
 
     if (!isValidEmail(student.email)) {
+        logger.warn(`Thêm sinh viên thất bại: Email sai định dạng (${student.email})`);
         console.log("Email sai định dạng.");
         return false;
     }
     if (!isValidPhoneNumber(student.phoneNumber)) {
+        logger.warn(`Thêm sinh viên thất bại: Số điện thoại sai định dạng (${student.phoneNumber})`);
         console.log("Số điện thoại sai định dạng.");
         return false;
     }
     if (!isValidFaculty(student.khoa)) {
+        logger.warn(`Thêm sinh viên thất bại: Khoa không hợp lệ (${student.khoa})`);
         console.log("Tên khoa sai định dạng.");
         return false;
     }
     if (!isValidStudentStatus(student.tinhTrang)) {
+        logger.warn(`Thêm sinh viên thất bại: Tình trạng không hợp lệ (${student.tinhTrang})`);
         console.log("Thông tin tình trạng sinh viên sai định dạng.");
         return false;
     }
 
     students.push(student);
     saveStudents(students);
+    logger.info(`Đã thêm sinh viên MSSV: ${student.mssv}, Họ tên: ${student.hoTen}`);
     return true;
 }
 
@@ -69,8 +75,10 @@ function deleteStudent(mssv) {
 
     if (students.length < initialLength) {
         saveStudents(students);
+        logger.info(`Đã xóa sinh viên MSSV: ${mssv}`);
         return true; 
     } else {
+        logger.warn(`Xóa thất bại: Không tìm thấy MSSV: ${mssv}`);
         return false; 
     }
 }
@@ -84,23 +92,28 @@ function updateStudent(mssv, updatedStudent) {
         if (student.mssv === mssv) {
             if (updatedStudent.email && !isValidEmail(updatedStudent.email)) {
                 console.log("Email sai định dạng.");
+                logger.warn(`Cập nhật thất bại: Email không hợp lệ (${updatedStudent.email})`);
                 return student; 
             }
             if (updatedStudent.phoneNumber && !isValidPhoneNumber(updatedStudent.phoneNumber)) {
                 console.log("Số điện thoại sai định dạng.");
+                logger.warn(`Cập nhật thất bại: Số điện thoại không hợp lệ (${updatedStudent.phoneNumber})`);
                 return student;
             }
             if (updatedStudent.khoa && !isValidFaculty(updatedStudent.khoa)) {
                 console.log("Tên khoa sai định dạng.");
+                logger.warn(`Cập nhật thất bại: Khoa không hợp lệ (${updatedStudent.khoa})`);
                 return student;
             }
             if (updatedStudent.tinhTrang && !isValidStudentStatus(updatedStudent.tinhTrang)) {
                 console.log("Thông tin tình trạng sinh viên sai định dạng.");
+                logger.warn(`Cập nhật thất bại: Tình trạng không hợp lệ (${updatedStudent.tinhTrang})`);
                 return student;
             }
 
 
             found = true;
+            logger.info(`Cập nhật MSSV: ${mssv}, Thông tin mới: ${JSON.stringify(updatedStudent)}`);
             return { ...student, ...updatedStudent }; 
         }
         return student;
@@ -110,6 +123,7 @@ function updateStudent(mssv, updatedStudent) {
         saveStudents(students);
         return true; 
     } else {
+        logger.warn(`Cập nhật thất bại: Không tìm thấy MSSV: ${mssv}`);
         return false; 
     }
 }
