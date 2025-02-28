@@ -36,8 +36,9 @@ Chương trình cần lưu trữ các thông tin sau về sinh viên:
 - **Hình thức lưu trữ dữ liệu**:  
   - Chọn ít nhất **một** trong số các định dạng: **XML, JSON, CSV, Database**.  
 
-### **Bổ sung Business Rules** (Ex03)
+### **Bổ sung Business Rules** 
 
+## Ex03
 01. MSSV phải là duy nhất  
    - Khi thêm hoặc cập nhật sinh viên, không được trùng MSSV với sinh viên khác.  
 
@@ -51,8 +52,10 @@ Chương trình cần lưu trữ các thông tin sau về sinh viên:
    - Ví dụ:  
      - `"Đang học"` → `"Bảo lưu"`, `"Tốt nghiệp"`, `"Đình chỉ"` (hợp lệ).  
      - `"Đã tốt nghiệp"` không thể quay lại `"Đang học"`.  
+
+## Ex04
 	 
-05. Có thể gửi mail / email / SMS đến sinh viên về biến động trạng thái
+05. Có thể gửi email / SMS / Zalo đến sinh viên về biến động trạng thái tùy vào SV đã đăng ký những hình thức notification nào (*không bắt buộc*)
 	
 06. Chỉ được phép xóa sinh viên có creation date/time trong khoảng thời gian nhất định. Ví dụ: 30 phút (configurable) 
 
@@ -66,7 +69,7 @@ Chương trình cần lưu trữ các thông tin sau về sinh viên:
 ---
 
 **TRƯỜNG ĐẠI HỌC [Tên Trường]**  
-**PHÒNG CÔNG TÁC SINH VIÊN**  
+**PHÒNG ĐÀO TẠO**  
 📍 Địa chỉ: [Địa chỉ trường]  
 📞 Điện thoại: [Số điện thoại] | 📧 Email: [Email liên hệ]  
 

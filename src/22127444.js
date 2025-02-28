@@ -4,17 +4,24 @@ const { Parser } = require('json2csv');
 const logger = require('./logger'); 
 const path = require('path');
 
-const file_path = path.join(__dirname, 'students.json');
+const config = {
+  emailDomain: '@student.university.edu.vn',
+  phoneRegex: /^(?:\+84|0)(?:3|5|7|8|9)\d{8}$/,
+  allowedStatusTransitions: {
+    "Đang học": ["Bảo lưu", "Tốt nghiệp", "Đình chỉ"],
+  }
+};
 
+const file_path = path.join(__dirname, 'students.json');
 
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    if (!emailRegex.test(email)) return false;
+    return email.endsWith(config.emailDomain);
 }
 
 function isValidPhoneNumber(phoneNumber) {
-    const phoneRegex = /^[0-9]{10,11}$/; 
-    return phoneRegex.test(phoneNumber);
+    return config.phoneRegex.test(phoneNumber);
 }
 
 function isValidFaculty(faculty) {
@@ -23,7 +30,7 @@ function isValidFaculty(faculty) {
 }
 
 function isValidStudentStatus(status) {
-    const validStatuses = ['Đang học', 'Đã tốt nghiệp', 'Đã thôi học', 'Tạm dừng học'];
+    const validStatuses = ['Đang học', 'Đã tốt nghiệp', 'Đã thôi học', 'Tạm dừng học', 'Bảo lưu', 'Đình chỉ'];
     return validStatuses.includes(status);
 }
 
@@ -43,9 +50,15 @@ function saveStudents(students) {
 function addStudent(student) {
     const students = loadStudents();
 
+    if (students.some(s => s.mssv === student.mssv)) {
+        logger.warn(`Thêm sinh viên thất bại: MSSV đã tồn tại (${student.mssv})`);
+        console.log("MSSV đã tồn tại.");
+        return false;
+    }
+
     if (!isValidEmail(student.email)) {
-        logger.warn(`Thêm sinh viên thất bại: Email sai định dạng (${student.email})`);
-        console.log("Email sai định dạng.");
+        logger.warn(`Thêm sinh viên thất bại: Email sai định dạng hoặc không thuộc tên miền cho phép (${student.email})`);
+        console.log("Email sai định dạng hoặc không thuộc tên miền cho phép.");
         return false;
     }
     if (!isValidPhoneNumber(student.phoneNumber)) {
@@ -70,7 +83,6 @@ function addStudent(student) {
     return true;
 }
 
-
 function deleteStudent(mssv) {
     let students = loadStudents();
     const initialLength = students.length;
@@ -87,15 +99,22 @@ function deleteStudent(mssv) {
     }
 }
 
-
 function updateStudent(mssv, updatedStudent) {
     let students = loadStudents();
     let found = false;
-
+    
+    if (updatedStudent.mssv && updatedStudent.mssv !== mssv) {
+        if (students.some(s => s.mssv === updatedStudent.mssv)) {
+            console.log("MSSV mới đã tồn tại.");
+            logger.warn(`Cập nhật thất bại: MSSV mới đã tồn tại (${updatedStudent.mssv})`);
+            return false;
+        }
+    }
+    
     students = students.map(student => {
         if (student.mssv === mssv) {
             if (updatedStudent.email && !isValidEmail(updatedStudent.email)) {
-                console.log("Email sai định dạng.");
+                console.log("Email sai định dạng hoặc không thuộc tên miền được chấp nhận.");
                 logger.warn(`Cập nhật thất bại: Email không hợp lệ (${updatedStudent.email})`);
                 return student; 
             }
@@ -109,13 +128,21 @@ function updateStudent(mssv, updatedStudent) {
                 logger.warn(`Cập nhật thất bại: Khoa không hợp lệ (${updatedStudent.khoa})`);
                 return student;
             }
-            if (updatedStudent.tinhTrang && !isValidStudentStatus(updatedStudent.tinhTrang)) {
-                console.log("Thông tin tình trạng sinh viên sai định dạng.");
-                logger.warn(`Cập nhật thất bại: Tình trạng không hợp lệ (${updatedStudent.tinhTrang})`);
-                return student;
+            if (updatedStudent.tinhTrang) {
+                const currentStatus = student.tinhTrang;
+                if (currentStatus === "Đang học") {
+                    if (!config.allowedStatusTransitions["Đang học"].includes(updatedStudent.tinhTrang)) {
+                        console.log(`Chuyển đổi từ "Đang học" sang "${updatedStudent.tinhTrang}" không hợp lệ.`);
+                        logger.warn(`Cập nhật thất bại: Chuyển đổi tình trạng không hợp lệ từ ${currentStatus} sang ${updatedStudent.tinhTrang}`);
+                        return student;
+                    }
+                }
+                else if (currentStatus === "Đã tốt nghiệp" && updatedStudent.tinhTrang === "Đang học") {
+                    console.log("Không thể chuyển từ 'Đã tốt nghiệp' sang 'Đang học'.");
+                    logger.warn(`Cập nhật thất bại: Chuyển đổi từ ${currentStatus} sang ${updatedStudent.tinhTrang} không hợp lệ.`);
+                    return student;
+                }
             }
-
-
             found = true;
             logger.info(`Cập nhật MSSV: ${mssv}, Thông tin mới: ${JSON.stringify(updatedStudent)}`);
             return { ...student, ...updatedStudent }; 
@@ -132,7 +159,6 @@ function updateStudent(mssv, updatedStudent) {
     }
 }
 
-
 function searchStudents(searchTerm, faculty = null) {
     const students = loadStudents();
     const searchTermLower = searchTerm.toLowerCase();
@@ -146,7 +172,6 @@ function searchStudents(searchTerm, faculty = null) {
         return matchNameOrMSSV && matchFaculty;
     });
 }
-
 
 function updateStudentFaculty(mssv, newFaculty) {
     let students = loadStudents();
@@ -178,30 +203,34 @@ function updateStudentFaculty(mssv, newFaculty) {
 
 function updateStudentStatus(mssv, newStatus) {
     let students = loadStudents();
-    let found = false;
+    const studentFound = students.find(student => student.mssv === mssv);
+    if (!studentFound) {
+        console.log("Không tìm thấy MSSV.");
+        return false;
+    }
+    const currentStatus = studentFound.tinhTrang;
+    if (currentStatus === "Đang học") {
+        if (!config.allowedStatusTransitions["Đang học"].includes(newStatus)) {
+            console.log(`Chuyển đổi từ "Đang học" sang "${newStatus}" không hợp lệ.`);
+            logger.warn(`Cập nhật thất bại: Chuyển đổi tình trạng không hợp lệ từ ${currentStatus} sang ${newStatus}`);
+            return false;
+        }
+    } else if (currentStatus === "Đã tốt nghiệp" && newStatus === "Đang học") {
+        console.log("Không thể chuyển từ 'Đã tốt nghiệp' sang 'Đang học'.");
+        logger.warn(`Cập nhật thất bại: Chuyển đổi từ ${currentStatus} sang ${newStatus} không hợp lệ.`);
+        return false;
+    }
 
     students = students.map(student => {
         if (student.mssv === mssv) {
-            if (!isValidStudentStatus(newStatus)) {
-                console.log("Tình trạng sinh viên không hợp lệ.");
-                logger.warn(`Cập nhật thất bại: Tình trạng không hợp lệ (${newStatus})`);
-                return student;
-            }
-            found = true;
             logger.info(`Cập nhật MSSV: ${mssv}, Tình trạng mới: ${newStatus}`);
             return { ...student, tinhTrang: newStatus };
         }
         return student;
     });
-
-    if (found) {
-        saveStudents(students);
-        console.log("Cập nhật tình trạng sinh viên thành công!");
-        return true;
-    } else {
-        console.log("Không tìm thấy MSSV.");
-        return false;
-    }
+    saveStudents(students);
+    console.log("Cập nhật tình trạng sinh viên thành công!");
+    return true;
 }
 
 function updateStudentProgram(mssv, newProgram) {
@@ -315,10 +344,8 @@ function main() {
             console.log("3.1. Cập nhật khoa sinh viên");
             console.log("3.2. Cập nhật tình trạng sinh viên");
             console.log("3.3. Cập nhật chương trình đào tạo");
-
             console.log("4. Tìm kiếm sinh viên");
             console.log("5. Xem tất cả sinh viên");
-
             console.log("6. Import dữ liệu");
             console.log("7. Export dữ liệu");
             console.log("8. Xem phiên bản ứng dụng");
@@ -330,7 +357,7 @@ function main() {
                 case '1': 
                     const mssv = await askQuestion("Nhập MSSV: ");
                     const hoTen = await askQuestion("Nhập Họ tên: ");
-                    const ngaySinh = await askQuestion("Nhập ngày tháng năm sinh (dd/mm/yyyy: ");
+                    const ngaySinh = await askQuestion("Nhập ngày tháng năm sinh (dd/mm/yyyy): ");
                     const gioiTinh = await askQuestion("Nhập giới tính: ");
                     const khoa = await askQuestion("Nhập khoa: ");
                     const khoaHoc = await askQuestion("Nhập khóa: ");
@@ -372,21 +399,20 @@ function main() {
 
                 case '3': 
                     const mssvToUpdate = await askQuestion("Cập nhật theo MSSV: ");
-                    const updateField = await askQuestion("Nhập trường cần update (mssv,hoTen,ngaySinh,gioiTinh,khoa,khoaHoc,chuongTrinh, diaChi,email,phoneNumber,tinhTrang): ");
+                    const updateField = await askQuestion("Nhập trường cần update (mssv,hoTen,ngaySinh,gioiTinh,khoa,khoaHoc,chuongTrinh,diaChi,email,phoneNumber,tinhTrang): ");
                     const newValue = await askQuestion(`Nhập giá trị mới cho ${updateField}: `);
 
                     const updateObject = {};
                     updateObject[updateField] = newValue;
 
-
                     if (updateStudent(mssvToUpdate, updateObject)) {
                         console.log("Cập nhật sinh viên thành công");
                     } else {
-                        console.log("Không tìm thấy MSSV");
+                        console.log("Cập nhật sinh viên thất bại hoặc không tìm thấy MSSV");
                     }
                     break;
                 
-                    case '3.1': 
+                case '3.1': 
                     const mssvToUpdateFaculty = await askQuestion("Nhập MSSV: ");
                     const newFaculty = await askQuestion("Nhập khoa mới: ");
                     updateStudentFaculty(mssvToUpdateFaculty, newFaculty);
@@ -407,18 +433,17 @@ function main() {
                 case '4': 
                     const searchTerm = await askQuestion("Nhập tên hoặc MSSV (bỏ trống nếu chỉ tìm theo khoa): ");
                     const faculty = await askQuestion("Nhập khoa (bỏ trống nếu chỉ tìm theo tên/MSSV): ");
-                    
                     const searchResults = searchStudents(searchTerm, faculty);
                     
                     if (searchResults.length > 0) {
                         console.log("Kết quả tìm kiếm:");
                         console.table(searchResults); 
                     } else {
-                        console.log(searchResults);
+                        console.log("Không tìm thấy sinh viên nào phù hợp.");
                     }
                     break;
                 
-                 case '5': 
+                case '5': 
                     const allStudents = loadStudents();
                     console.log("Tất cả sinh viên:");
                     console.log(allStudents); 
