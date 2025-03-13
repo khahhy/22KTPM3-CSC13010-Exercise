@@ -1,0 +1,75 @@
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: inherit;
+}
+  
+.toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+  
+.search-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 5px 10px;
+}
+  
+.search-box input {
+    border: none;
+    outline: none;
+    font-size: 14px;
+}
+  
+.dropdown {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+  
+.filter-btn {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.apply-btn {
+    padding: 6px 12px;
+    background: #6c63ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+  
+.toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+  
+.secondary-btn {
+    padding: 6px 12px;
+    border: 1px solid #6c63ff;
+    color: #6c63ff;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+  
+.primary-btn {
+    padding: 6px 12px;
+    background: #6c63ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+  
