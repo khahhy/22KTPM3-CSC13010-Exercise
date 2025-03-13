@@ -1,3 +1,33 @@
 [2025-03-12 22:48:32] INFO: Đã xóa sinh viên MSSV: 22127456
 [2025-03-12 23:18:43] INFO: Đã thêm sinh viên MSSV: 22127123
 [2025-03-12 23:29:34] INFO: Cập nhật MSSV: 22127123
+[2025-03-13 22:37:29] INFO: Đã thêm sinh viên MSSV: 22127444
+[2025-03-13 22:37:37] INFO: Đã xóa sinh viên MSSV: 22127444
+[2025-03-13 22:45:35] WARN: Thêm thất bại: MSSV đã tồn tại (22127123)
+[2025-03-13 22:45:53] INFO: Đã thêm sinh viên MSSV: 22127124
+[2025-03-13 22:45:59] INFO: Đã xóa sinh viên MSSV: 22127124
+[2025-03-13 23:19:01] WARN: Cập nhật thất bại: Email không hợp lệ (an232clc@gmail.com)
+[2025-03-13 23:54:56] INFO: Đã thêm sinh viên MSSV: 22127444
+[2025-03-13 23:59:41] WARN: Cập nhật thất bại: Email không hợp lệ (an232clc@gmail.com)
+[2025-03-14 00:02:20] WARN: Cập nhật thất bại: Email không hợp lệ (an232clc@gmail.com)
+[2025-03-14 00:06:49] WARN: Cập nhật thất bại: Email không hợp lệ (an232clc@gmail.com)
+[2025-03-14 00:09:18] WARN: Cập nhật thất bại: Email không hợp lệ (an232clc@gmail.com)
+[2025-03-14 00:13:58] WARN: Cập nhật thất bại: Email không hợp lệ (an232clc@gmail.com)
+[2025-03-14 00:17:54] INFO: Đã xóa sinh viên MSSV: 22127333
+[2025-03-14 00:22:13] WARN: Thêm thất bại: MSSV đã tồn tại (22127444)
+[2025-03-14 00:23:34] INFO: Đã thêm sinh viên MSSV: 22127129
+[2025-03-14 00:25:08] WARN: Xóa thất bại: MSSV 22127320 đã quá thời gian xóa cho phép.
+[2025-03-14 00:26:43] WARN: Xóa thất bại: MSSV 22127320 đã quá thời gian xóa cho phép.
+[2025-03-14 00:27:47] WARN: Xóa thất bại: MSSV 22127320 đã quá thời gian xóa cho phép.
+[2025-03-14 00:29:03] WARN: Xóa thất bại: MSSV 22127320 đã quá thời gian xóa cho phép.
+[2025-03-14 00:33:16] WARN: Cập nhật thất bại: Email không hợp lệ (binh223clc@gmail.com)
+[2025-03-14 00:33:30] INFO: Đã xóa sinh viên MSSV: 22127444
+[2025-03-14 00:39:46] INFO: Đã xóa khoa: Khoa Tiếng Anh thương mại
+[2025-03-14 01:25:28] WARN: Xóa thất bại: Không tìm thấy tình trạng [object Object]
+[2025-03-14 01:25:32] WARN: Xóa thất bại: Không tìm thấy tình trạng [object Object]
+[2025-03-14 01:27:48] WARN: Xóa thất bại: Không tìm thấy tình trạng [object Object]
+[2025-03-14 01:28:30] WARN: Xóa thất bại: Không tìm thấy tình trạng Đình chỉ học tập
+[2025-03-14 01:29:27] INFO: Đã xóa tình trạng: Đình chỉ học tập
+[2025-03-14 01:31:39] INFO: Đã xóa tình trạng: Đình chỉ học tập
+[2025-03-14 01:32:34] INFO: Đã xóa khoa: Khoa Luật
+[2025-03-14 01:46:19] INFO: Đã xóa chương trình: APCS

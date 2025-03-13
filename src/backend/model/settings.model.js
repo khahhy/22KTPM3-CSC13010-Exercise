@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const filePath = path.join(__dirname, "../settings.json");
+const filePath = path.join(__dirname, "../data/settings.json");
 
 function loadSettings() {
     try {

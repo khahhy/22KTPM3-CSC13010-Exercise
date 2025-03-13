@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/popupAddStudent.css";
 import { addStudent } from "../services/studentService";
+import { getDepartments } from '../services/departmentService';
 
 function PopupAddStudent({ onClose, onAddStudent }) {
     const [student, setStudent] = useState({
@@ -16,6 +17,15 @@ function PopupAddStudent({ onClose, onAddStudent }) {
         address: "",
         status: "Đang theo học",
     });
+    const [departments, setDepartments] = useState([]);
+
+    useEffect(() => {
+        const fetchDepartments = async () => {
+            const data = await getDepartments(); 
+            setDepartments(data);
+        };
+        fetchDepartments();
+    }, []);
 
     const handleChange = (e) => {
         setStudent({ ...student, [e.target.name]: e.target.value });
@@ -26,12 +36,14 @@ function PopupAddStudent({ onClose, onAddStudent }) {
 
         const result = await addStudent(student);
 
-        if (result) {
-            alert("Thêm sinh viên thành công");
-            onAddStudent(student);
-            onClose();
+        if (result && result.message) {
+            alert(result.message);
+            if (result.message === "Thêm sinh viên thành công") {
+                onAddStudent(student);
+                onClose();
+            }
         } else {
-            alert("Thêm sinh viên thất bại");
+            alert("Có lỗi xảy ra");
         }
         
     };
@@ -48,7 +60,18 @@ function PopupAddStudent({ onClose, onAddStudent }) {
                         <option value="Nam">Nam</option>
                         <option value="Nữ">Nữ</option>
                     </select>
-                    <input type="text" name="faculty" placeholder="Khoa" onChange={handleChange} required />
+                    <select name="faculty" onChange={handleChange}>
+                        <option value="">Khoa</option>
+                        {departments.length > 0 ? (
+                            departments.map((dept, index) => (
+                                <option key={index} value={dept.name}>
+                                    {dept.name}
+                                </option>
+                            ))
+                        ) : (
+                            <option disabled>Không có khoa nào</option>
+                        )}
+                    </select>
                     <input type="text" name="course" placeholder="Khóa" onChange={handleChange} required />
                     <input type="text" name="program" placeholder="Chương trình đào tạo" onChange={handleChange} required />
                     <input type="text" name="address" placeholder="Địa chỉ" onChange={handleChange} required />

@@ -6,7 +6,8 @@ const {
     addStudent,
     deleteStudent,
     updateStudent,
-    importStudents
+    importStudents,
+    generateDoc
 } = require("../controller/student.controller");
 
 const router = express.Router();
@@ -20,5 +21,7 @@ router.delete("/:mssv", deleteStudent);
 
 
 router.post("/import", upload.single("file"), importStudents);
+router.get("/certificate/:mssv/:format", generateDoc);
+
 
 module.exports = router;

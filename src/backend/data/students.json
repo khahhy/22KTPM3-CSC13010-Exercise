@@ -1,18 +1,5 @@
 [
   {
-    "mssv": "22127333",
-    "name": "Trần Văn Bình",
-    "dob": "18/5/2004",
-    "gender": "Nam",
-    "faculty": "Khoa Tiếng Nhật",
-    "course": "2022",
-    "program": "Chương trình chuẩn",
-    "address": "12 Nguyễn Văn Cừ, quận 1, HCM",
-    "email": "an22clc@gmail.com",
-    "phone": "0234588712",
-    "status": "Tạm dừng học"
-  },
-  {
     "mssv": "22127343",
     "name": "Phạm Văn An",
     "dob": "28/7/2004",
@@ -23,7 +10,8 @@
     "address": "158 Nguyễn Văn Cừ, quận 1, HCM",
     "email": "an22clc@gmail.com",
     "phone": "0231928219",
-    "status": "Đang học"
+    "status": "Đang học",
+    "createdAt": "2025-02-14 00:23:34"
   },
   {
     "mssv": "22127320",
@@ -36,7 +24,8 @@
     "address": "Quận 1, HCM",
     "email": "binh22clc@gmail.com",
     "phone": "0234588712",
-    "status": "Đang học"
+    "status": "Đang học",
+    "createdAt": "2025-02-14 00:13:34"
   },
   {
     "mssv": "22127343",
@@ -49,7 +38,8 @@
     "address": "158 Nguyễn Văn Cừ, Quận 1, HCM",
     "email": "an22clc@gmail.com",
     "phone": "231928219",
-    "status": "Đang học"
+    "status": "Đang học",
+    "createdAt": "2025-02-14 00:01:34"
   },
   {
     "name": "Trần Văn Khang",
@@ -62,6 +52,21 @@
     "course": "2022",
     "program": "Chất lượng cao",
     "address": "Quận 1, Tp Hồ Chí Minh",
-    "status": "Bảo lưu"
+    "status": "Bảo lưu",
+    "createdAt": "2025-02-14 00:03:34"
+  },
+  {
+    "name": "Trần Minh Khải",
+    "mssv": "22127129",
+    "email": "22127129@student.hcmus.edu.vn",
+    "phone": "0347846284",
+    "dob": "2004-03-04",
+    "gender": "Nam",
+    "faculty": "Khoa Tiếng Pháp",
+    "course": "2022",
+    "program": "Chất lượng cao",
+    "address": "quận 4, thành phố Hồ Chí Minh",
+    "status": "Đang theo học",
+    "createdAt": "2025-03-14 00:23:34"
   }
 ]

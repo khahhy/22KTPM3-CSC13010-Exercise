@@ -36,10 +36,13 @@ function InfoTable() {
     const removeStudent = async (mssv) => {
         if (window.confirm("Bạn có chắc muốn xóa sinh viên này?")) {
             const result = await deleteStudent(mssv);
-            if (result) {
-                setStudents(students.filter(s => s.mssv !== mssv));
+            if (result && result.message) {
+                alert(result.message);
+                if (result.message === "Xóa sinh viên thành công") {
+                    setStudents(students.filter(s => s.mssv !== mssv));
+                }
             } else {
-                alert("Xóa thất bại");
+                alert("Có lỗi xảy ra khi xóa sinh viên!");
             }
         }
     };
@@ -94,8 +97,9 @@ function InfoTable() {
                     }}
                 />
             )}
-
-            <div className="pagination">
+            
+            {/** 
+             * <div className="pagination">
                 <button className="page-btn active">1</button>
                 <button className="page-btn">2</button>
                 <button className="page-btn">3</button>
@@ -105,6 +109,8 @@ function InfoTable() {
                 <button className="page-btn">11</button>
                 <button className="page-btn">{">"}</button>
                 </div>
+             * **/}
+            
         </div>
     );
 }

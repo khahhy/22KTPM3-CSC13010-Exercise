@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const filePath = path.join(__dirname, "../students.json");
+const filePath = path.join(__dirname, "../data/students.json");
 
 function loadStudents() {
     try {

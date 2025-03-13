@@ -1,5 +1,3 @@
-import axios from "axios";
-
 const API_BASE_URL = "http://localhost:5000/api"; 
 
 export const getDepartments = async () => {
@@ -32,6 +30,6 @@ export const deleteDepartment = async (name) => {
         return await response.json();
     } catch (error) {
         console.error("Lỗi khi xóa khoa:", error);
-        return null;
+        return error.response ? error.response.data : { message: "Lỗi không xác định" };
     }
 };

@@ -1,4 +1,5 @@
 const { loadDepartments, saveDepartments } = require("../model/department.model");
+const { loadStudents } = require("../model/student.model");
 const logger = require("../logger");
 
 function getAllDepartments(req, res) {
@@ -28,7 +29,14 @@ function addDepartment(req, res) {
 function deleteDepartment(req, res) {
     const { name } = req.params;
     let departments = loadDepartments();
+    const students = loadStudents();
     const initialLength = departments.length;
+
+    const hasStudents = students.some(student => student.faculty === name);
+
+    if (hasStudents) {
+        return res.status(400).json({ message: "Không thể xóa khoa vì có sinh viên đang học trong khoa này." });
+    }
 
     departments = departments.filter(d => d.name !== name);
 

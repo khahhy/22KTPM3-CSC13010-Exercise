@@ -28,7 +28,7 @@ export async function addStudent(studentData) {
         return response.data;
     } catch (error) {
         console.error("Lỗi khi thêm sinh viên:", error);
-        return null;
+        return error.response ? error.response.data : { message: "Lỗi không xác định" };
     }
 }
 
@@ -38,7 +38,7 @@ export async function updateStudent(mssv, updatedData) {
         return response.data;
     } catch (error) {
         console.error(`Lỗi khi cập nhật sinh viên MSSV ${mssv}:`, error);
-        return null;
+        return error.response ? error.response.data : { message: "Lỗi không xác định" };
     }
 }
 
@@ -48,7 +48,7 @@ export async function deleteStudent(mssv) {
         return response.data;
     } catch (error) {
         console.error(`Lỗi khi xóa sinh viên MSSV ${mssv}:`, error);
-        return null;
+        return error.response ? error.response.data : { message: "Lỗi không xác định" };
     }
 }
 
@@ -81,3 +81,16 @@ export async function exportStudents(format = "json") {
         return false;
     }
 }
+
+export const getCertificate = async (mssv, format) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/students/certificate/${mssv}/${format}`);
+        if (!response.ok) {
+            throw new Error("Lỗi khi lấy giấy xác nhận");
+        }
+        return await response.text(); 
+    } catch (error) {
+        console.error("Lỗi khi xuất giấy xác nhận:", error);
+        throw error;
+    }
+};

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/popupAddStudent.css";
 import { updateStudent } from "../services/studentService";
+import { formatDate } from "../utils";
 
 function PopupUpdateStudent({ onClose, student, onUpdateStudent }) {
     const [updatedStudent, setUpdatedStudent] = useState(student);
@@ -18,12 +19,14 @@ function PopupUpdateStudent({ onClose, student, onUpdateStudent }) {
 
         const result = await updateStudent(updatedStudent.mssv, updatedStudent);
 
-        if (result) {
-            alert("Cập nhật sinh viên thành công");
-            onUpdateStudent(updatedStudent);
-            onClose();
+        if (result && result.message) {
+            alert(result.message);
+            if (result.message === "Cập nhật sinh viên thành công") {
+                onUpdateStudent(updatedStudent);
+                onClose();
+            }
         } else {
-            alert("Cập nhật thất bại");
+            alert("Có lỗi xảy ra");
         }
     };
 
@@ -34,7 +37,7 @@ function PopupUpdateStudent({ onClose, student, onUpdateStudent }) {
                 <form onSubmit={handleSubmit}>
                     <input type="text" name="name" value={updatedStudent.name} onChange={handleChange} required />
                     <input type="text" name="mssv" value={updatedStudent.mssv} readOnly />
-                    <input type="date" name="dob" value={updatedStudent.dob} onChange={handleChange} required />
+                    <input type="date" name="dob" value={formatDate(updatedStudent.dob)} onChange={handleChange} required />
                     <select name="gender" value={updatedStudent.gender} onChange={handleChange}>
                         <option value="Nam">Nam</option>
                         <option value="Nữ">Nữ</option>
