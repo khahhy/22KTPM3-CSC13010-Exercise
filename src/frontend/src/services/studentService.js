@@ -82,15 +82,16 @@ export async function exportStudents(format = "json") {
     }
 }
 
-export const getCertificate = async (mssv, format) => {
+export const getCertificate = async (mssv, format, reason) => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/students/certificate/${mssv}/${format}`);
-        if (!response.ok) {
-            throw new Error("Lỗi khi lấy giấy xác nhận");
-        }
-        return await response.text(); 
+        const response = await axios.post(`${API_BASE_URL}/students/certificate/${mssv}/${format}`, {
+            reason
+        }, { responseType: "text" });
+
+        return response.data; 
     } catch (error) {
         console.error("Lỗi khi xuất giấy xác nhận:", error);
-        throw error;
+        throw new Error("Lỗi khi lấy giấy xác nhận!");
     }
 };
+

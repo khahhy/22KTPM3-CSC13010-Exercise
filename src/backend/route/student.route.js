@@ -21,7 +21,7 @@ router.delete("/:mssv", deleteStudent);
 
 
 router.post("/import", upload.single("file"), importStudents);
-router.get("/certificate/:mssv/:format", generateDoc);
+router.post("/certificate/:mssv/:format", generateDoc);
 
 
 module.exports = router;

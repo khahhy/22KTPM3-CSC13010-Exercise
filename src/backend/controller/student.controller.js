@@ -155,6 +155,7 @@ async function importStudents(req, res) {
 
 function generateDoc(req, res) {
     const { mssv, format } = req.params;
+    const { reason } = req.body;
     const students = loadStudents();
     const student = students.find(s => s.mssv === mssv);
 
@@ -162,11 +163,11 @@ function generateDoc(req, res) {
         return res.status(404).json({ message: "Không tìm thấy sinh viên" });
     }
 
-    const universityName = "Trường Đại học ABC";
+    const universityName = "Trường Đại học Khoa Học Tự Nhiên - Đại học Quốc gia Thành phố Hồ Chí Minh";
     const trainingDepartment = "Phòng Đào Tạo";
-    const address = "123 Đường Đại Học, Quận 1, TP.HCM";
-    const phone = "(+84) 28 1234 5678";
-    const email = "daotao@university.edu.vn";
+    const address = "227 Nguyễn Văn Cừ, Phường 5, Quận 5, Thành phố Hồ Chí Minh";
+    const phone = "(028) 62884499 hoặc (028) 73089899";
+    const email = "info@hcmus.edu.vn";
 
     const today = moment().format("DD/MM/YYYY");
     const expireDate = moment().add(3, "months").format("DD/MM/YYYY");
@@ -174,41 +175,74 @@ function generateDoc(req, res) {
     const content = `
         <h1 style="text-align: center;">${universityName}</h1>
         <h2 style="text-align: center;">${trainingDepartment}</h2>
-        <p style="text-align: center;">📍 ${address} | 📞 ${phone} | 📧 ${email}</p>
+        <p style="text-align: center;">📍 Địa chỉ: ${address}</p>
+        <p style="text-align: center;"> 📞 Điện thoại: ${phone} | 📧 Email: ${email}</p>
         <hr />
         <h2 style="text-align: center;">GIẤY XÁC NHẬN TÌNH TRẠNG SINH VIÊN</h2>
-        <p>Trường Đại học <strong>${universityName}</strong> xác nhận:</p>
-        <h3>1. Thông tin sinh viên:</h3>
-        <p>- <strong>Họ và tên:</strong> ${student.name}</p>
-        <p>- <strong>Mã số sinh viên:</strong> ${student.mssv}</p>
-        <p>- <strong>Ngày sinh:</strong> ${student.dob}</p>
-        <p>- <strong>Giới tính:</strong> ${student.gender}</p>
-        <p>- <strong>Khoa:</strong> ${student.faculty}</p>
-        <p>- <strong>Chương trình đào tạo:</strong> ${student.program}</p>
-        <p>- <strong>Khóa:</strong> ${student.course}</p>
-        <h3>2. Tình trạng sinh viên hiện tại:</h3>
-        <p>- ${student.status}</p>
-        <h3>3. Giấy xác nhận có hiệu lực đến ngày:</h3>
-        <p>- ${expireDate}</p>
+        <div style="width: 60%; margin: 0 auto; text-align: left;">
+            <p>Trường Đại học <strong>${universityName}</strong> xác nhận:</p>
+            <h3>1. Thông tin sinh viên:</h3>
+            <p>- <strong>Họ và tên:</strong> ${student.name}</p>
+            <p>- <strong>Mã số sinh viên:</strong> ${student.mssv}</p>
+            <p>- <strong>Ngày sinh:</strong> ${student.dob}</p>
+            <p>- <strong>Giới tính:</strong> ${student.gender}</p>
+            <p>- <strong>Khoa:</strong> ${student.faculty}</p>
+            <p>- <strong>Chương trình đào tạo:</strong> ${student.program}</p>
+            <p>- <strong>Khóa:</strong> ${student.course}</p>
+            <h3>2. Tình trạng sinh viên hiện tại:</h3>
+            <p>- ${student.status}</p>
+            <h3>3. Mục đích xác nhận:</h3>
+            <p>- ${reason}</p>
+            <h3>4. Giấy xác nhận có hiệu lực đến ngày:</h3>
+            <p>- ${expireDate}</p>
+        </div>
+
         <br />
-        <p style="text-align: right;">📅 Ngày cấp: ${today}</p>
-        <p style="text-align: right;">🖋 <strong>Trưởng Phòng Đào Tạo</strong></p>
+        <p style="width: 60%; margin: 0 auto; text-align: right;">📅 Ngày cấp: ${today}</p>
+        <p style="width: 60%; margin: 0 auto; text-align: right;">🖋 <strong>Trưởng Phòng Đào Tạo</strong></p>
     `;
 
     if (format === "html") {
         res.setHeader("Content-Type", "text/html");
         return res.send(content);
     } else if (format === "md") {
-        const mdContent = `# GIẤY XÁC NHẬN TÌNH TRẠNG SINH VIÊN\n\n` + 
-                          `**Họ và tên:** ${student.name}\n\n` +
-                          `**MSSV:** ${student.mssv}\n\n` +
-                          `**Ngày sinh:** ${student.dob}\n\n` +
-                          `**Giới tính:** ${student.gender}\n\n` +
-                          `**Khoa:** ${student.faculty}\n\n` +
-                          `**Chương trình đào tạo:** ${student.program}\n\n` +
-                          `**Tình trạng:** ${student.status}\n\n` +
-                          `**Ngày cấp:** ${today}\n\n` +
-                          `---\n**Trưởng Phòng Đào Tạo**\n\n`;
+        const mdContent = `# ${universityName}  
+## ${trainingDepartment}  
+
+📍 **Địa chỉ:** ${address}  
+📞 **Điện thoại:** ${phone} | 📧 **Email:** ${email}  
+
+---  
+
+# GIẤY XÁC NHẬN TÌNH TRẠNG SINH VIÊN  
+
+${universityName} xác nhận:  
+
+## 1. Thông tin sinh viên:  
+- **Họ và tên:** ${student.name}  
+- **Mã số sinh viên:** ${student.mssv}  
+- **Ngày sinh:** ${student.dob}  
+- **Giới tính:** ${student.gender}  
+- **Khoa:** ${student.faculty}  
+- **Chương trình đào tạo:** ${student.program}  
+- **Khóa:** ${student.course}  
+
+## 2. Tình trạng sinh viên hiện tại:  
+- ${student.status}
+
+## 3. Mục đích xác nhận:  
+- ${reason} 
+
+## 4. Giấy xác nhận có hiệu lực đến ngày:  
+- ${expireDate}
+
+📅 **Ngày cấp:** ${today}  
+
+---  
+
+🖋 **Trưởng Phòng Đào Tạo**  
+`;
+
         res.setHeader("Content-Type", "text/markdown");
         return res.send(mdContent);
     } else {
