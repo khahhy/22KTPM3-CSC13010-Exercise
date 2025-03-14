@@ -2,9 +2,39 @@ import React, { useState, useEffect } from "react";
 import "../styles/popupAddStudent.css";
 import { updateStudent } from "../services/studentService";
 import { formatDate } from "../utils";
+import { getDepartments } from '../services/departmentService';
+import { getPrograms } from "../services/programService";
+import { getStatus } from "../services/statusService";
 
 function PopupUpdateStudent({ onClose, student, onUpdateStudent }) {
     const [updatedStudent, setUpdatedStudent] = useState(student);
+    const [departments, setDepartments] = useState([]);
+    const [programs, setPrograms] = useState([]);
+    const [statuses, setStatus] = useState([]);
+    
+    useEffect(() => {
+        const fetchDepartments = async () => {
+            const data = await getDepartments(); 
+            setDepartments(data);
+        };
+        fetchDepartments();
+    }, []);
+    
+    useEffect(() => {
+        const fetchPrograms = async () => {
+            const data = await getPrograms();
+            setPrograms(data);
+        };
+        fetchPrograms();
+    }, []);
+    
+    useEffect(() => {
+        const fetchStatuses = async () => {
+            const data = await getStatus();
+            setStatus(data);
+        };
+        fetchStatuses();
+    }, []);
 
     useEffect(() => {
         setUpdatedStudent(student);
@@ -42,19 +72,45 @@ function PopupUpdateStudent({ onClose, student, onUpdateStudent }) {
                         <option value="Nam">Nam</option>
                         <option value="Nữ">Nữ</option>
                     </select>
-                    <input type="text" name="faculty" value={updatedStudent.faculty} onChange={handleChange} required />
+                    <select name="faculty" onChange={handleChange}>
+                        <option value="">Khoa</option>
+                        {departments.length > 0 ? (
+                            departments.map((dept, index) => (
+                                <option key={index} value={dept.name}>
+                                    {dept.name}
+                                </option>
+                            ))
+                        ) : (
+                            <option disabled>Không có khoa nào</option>
+                        )}
+                    </select>
                     <input type="text" name="course" value={updatedStudent.course} onChange={handleChange} required />
-                    <input type="text" name="program" value={updatedStudent.program} onChange={handleChange} required />
+                    <select name="program" onChange={handleChange}>
+                        <option value="">Chương trình đào tạo</option>
+                        {programs.length > 0 ? (
+                            programs.map((item, index) => (
+                                <option key={index} value={item.name}>
+                                    {item.name}
+                                </option>
+                            ))
+                        ) : (
+                            <option disabled>Không có chương trình nào</option>
+                        )}
+                    </select>
                     <input type="text" name="address" value={updatedStudent.address} onChange={handleChange} required />
                     <input type="email" name="email" value={updatedStudent.email} onChange={handleChange} required />
                     <input type="text" name="phone" value={updatedStudent.phone} onChange={handleChange} required />
-                    <select name="status" value={updatedStudent.status} onChange={handleChange}>
-                        <option value="Đang theo học">Đang theo học</option>
-                        <option value="Đã hoàn thành chương trình, chờ xét tốt nghiệp">Đã hoàn thành chương trình, chờ xét tốt nghiệp</option>
-                        <option value="Đã tốt nghiệp">Đã tốt nghiệp</option>
-                        <option value="Bảo lưu">Bảo lưu</option>
-                        <option value="Đình chỉ học tập">Đình chỉ học tập</option>
-                        <option value="Tình trạng khác">Tình trạng khác</option>
+                    <select name="status" onChange={handleChange}>
+                        <option value="">Tình trạng sinh viên</option>
+                        {statuses.length > 0 ? (
+                            statuses.map((item, index) => (
+                                <option key={index} value={item.name}>
+                                    {item.name}
+                                </option>
+                            ))
+                        ) : (
+                            <option disabled>Không có tình trạng nào</option>
+                        )}
                     </select>
                     <button type="submit">Cập nhật</button>
                     <button type="button" onClick={onClose}>Hủy</button>

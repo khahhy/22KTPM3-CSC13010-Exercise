@@ -1,16 +1,16 @@
 [
   {
     "mssv": "22127343",
-    "name": "Phạm Văn An",
+    "name": "Phạm Văn Sang",
     "dob": "28/7/2004",
     "gender": "Nam",
     "faculty": "Khoa Tiếng Pháp",
     "course": "2023",
     "program": "CLC",
     "address": "158 Nguyễn Văn Cừ, quận 1, HCM",
-    "email": "an22clc@gmail.com",
-    "phone": "0231928219",
-    "status": "Đang học",
+    "email": "22127343@student.hcmus.edu.vn",
+    "phone": "0331928219",
+    "status": "Đình chỉ học tập",
     "createdAt": "2025-02-14 00:23:34"
   },
   {
@@ -22,30 +22,16 @@
     "course": "2023",
     "program": "CLC",
     "address": "Quận 1, HCM",
-    "email": "binh22clc@gmail.com",
-    "phone": "0234588712",
+    "email": "22127320@student.hcmus.edu.vn",
+    "phone": "0334588712",
     "status": "Đang học",
     "createdAt": "2025-02-14 00:13:34"
   },
   {
-    "mssv": "22127343",
-    "name": "Phạm Văn An",
-    "dob": "28/07/2004",
-    "gender": "Nam",
-    "faculty": "Khoa Tiếng Pháp",
-    "course": "2024",
-    "program": "CLC",
-    "address": "158 Nguyễn Văn Cừ, Quận 1, HCM",
-    "email": "an22clc@gmail.com",
-    "phone": "231928219",
-    "status": "Đang học",
-    "createdAt": "2025-02-14 00:01:34"
-  },
-  {
     "name": "Trần Văn Khang",
     "mssv": "22127123",
-    "email": "tvkhang22@clc.fitus.edu.vn",
-    "phone": "0283767823",
+    "email": "22127123@student.hcmus.edu.vn",
+    "phone": "0983767823",
     "dob": "2004-07-02",
     "gender": "Nam",
     "faculty": "Khoa Tiếng Nhật",
@@ -68,5 +54,19 @@
     "address": "quận 4, thành phố Hồ Chí Minh",
     "status": "Đang theo học",
     "createdAt": "2025-03-14 00:23:34"
+  },
+  {
+    "name": "Phan Văn Hùng",
+    "mssv": "22127102",
+    "email": "22127102@student.hcmus.edu.vn",
+    "phone": "0348629846",
+    "dob": "2004-03-12",
+    "gender": "Nam",
+    "faculty": "Khoa Tiếng Anh thương mại",
+    "course": "2022",
+    "program": "Chương trình Chuẩn",
+    "address": "Quận 1, Tp Hồ Chí Minh",
+    "status": "Đang theo học",
+    "createdAt": "2025-03-14 11:49:07"
   }
 ]

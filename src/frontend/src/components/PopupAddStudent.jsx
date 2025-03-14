@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import "../styles/popupAddStudent.css";
 import { addStudent } from "../services/studentService";
 import { getDepartments } from '../services/departmentService';
+import { getPrograms } from "../services/programService";
+import { getStatus } from "../services/statusService";
 
 function PopupAddStudent({ onClose, onAddStudent }) {
     const [student, setStudent] = useState({
@@ -15,9 +17,11 @@ function PopupAddStudent({ onClose, onAddStudent }) {
         course: "",
         program: "",
         address: "",
-        status: "Đang theo học",
+        status: "",
     });
     const [departments, setDepartments] = useState([]);
+    const [programs, setPrograms] = useState([]);
+    const [statuses, setStatus] = useState([]);
 
     useEffect(() => {
         const fetchDepartments = async () => {
@@ -25,6 +29,22 @@ function PopupAddStudent({ onClose, onAddStudent }) {
             setDepartments(data);
         };
         fetchDepartments();
+    }, []);
+
+    useEffect(() => {
+        const fetchPrograms = async () => {
+            const data = await getPrograms();
+            setPrograms(data);
+        };
+        fetchPrograms();
+    }, []);
+
+    useEffect(() => {
+        const fetchStatuses = async () => {
+            const data = await getStatus();
+            setStatus(data);
+        };
+        fetchStatuses();
     }, []);
 
     const handleChange = (e) => {
@@ -45,7 +65,6 @@ function PopupAddStudent({ onClose, onAddStudent }) {
         } else {
             alert("Có lỗi xảy ra");
         }
-        
     };
 
     return (
@@ -73,17 +92,32 @@ function PopupAddStudent({ onClose, onAddStudent }) {
                         )}
                     </select>
                     <input type="text" name="course" placeholder="Khóa" onChange={handleChange} required />
-                    <input type="text" name="program" placeholder="Chương trình đào tạo" onChange={handleChange} required />
+                    <select name="program" onChange={handleChange}>
+                        <option value="">Chương trình đào tạo</option>
+                        {programs.length > 0 ? (
+                            programs.map((item, index) => (
+                                <option key={index} value={item.name}>
+                                    {item.name}
+                                </option>
+                            ))
+                        ) : (
+                            <option disabled>Không có chương trình nào</option>
+                        )}
+                    </select>
                     <input type="text" name="address" placeholder="Địa chỉ" onChange={handleChange} required />
                     <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
                     <input type="text" name="phone" placeholder="Số điện thoại" onChange={handleChange} required />
                     <select name="status" onChange={handleChange}>
-                        <option value="Đang theo học">Đang theo học</option>
-                        <option value="Đã hoàn thành chương trình, chờ xét tốt nghiệp">Đã hoàn thành chương trình, chờ xét tốt nghiệp</option>
-                        <option value="Đã tốt nghiệp">Đã tốt nghiệp</option>
-                        <option value="Bảo lưu">Bảo lưu</option>
-                        <option value="Đình chỉ học tập">Đình chỉ học tập</option>
-                        <option value="Tình trạng khác">Tình trạng khác</option>
+                        <option value="">Tình trạng sinh viên</option>
+                        {statuses.length > 0 ? (
+                            statuses.map((item, index) => (
+                                <option key={index} value={item.name}>
+                                    {item.name}
+                                </option>
+                            ))
+                        ) : (
+                            <option disabled>Không có tình trạng nào</option>
+                        )}
                     </select>
                     <button type="submit">Thêm</button>
                     <button type="button" onClick={onClose}>Hủy</button>

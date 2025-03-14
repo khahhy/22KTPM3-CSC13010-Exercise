@@ -1,7 +1,0 @@
-[2025-02-21 15:27:03] WARN: Thêm sinh viên thất bại: Khoa không hợp lệ (Công nghệ thông tin)
-[2025-02-21 15:46:05] INFO: Cập nhật MSSV: 22127333, Khoa mới: Khoa Tiếng Pháp
-[2025-02-21 16:52:35] INFO: Cập nhật MSSV: 22127333, Khoa mới: Khoa Tiếng Nhật
-[2025-02-21 16:53:08] WARN: Cập nhật thất bại: Tình trạng không hợp lệ (Thôi học)
-[2025-02-21 16:53:45] INFO: Cập nhật MSSV: 22127333, Tình trạng mới: Tạm dừng học
-[2025-02-21 16:54:21] INFO: Cập nhật MSSV: 22127333, Chương trình đào tạo mới: Chương trình chuẩn
-[2025-02-28 19:56:43] WARN: Thêm sinh viên thất bại: MSSV đã tồn tại (22127343)

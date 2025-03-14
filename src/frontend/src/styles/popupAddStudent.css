@@ -14,17 +14,20 @@
     background: white;
     padding: 40px;
     border-radius: 8px;
-    width: 400px;
+    width: 500px;
     text-align: center;
+    box-sizing: border-box;
 }
 
 .popup-content input,
 .popup-content select {
-    width: 100%;
+    width: 100%; 
     padding: 10px;
     margin: 5px 0;
     border: 1px solid #ddd;
     border-radius: 5px;
+    box-sizing: border-box; 
+    display: block;
 }
 
 .popup-content button {

@@ -6,11 +6,36 @@
   ],
   "allowedStatusTransitions": {
     "Đang học": [
+      "Đang học",
       "Bảo lưu",
-      "Tốt nghiệp",
-      "Đình chỉ"
+      "Đã tốt nghiệp",
+      "Đình chỉ học tập"
     ],
-    "Đã tốt nghiệp": []
+    "Đã tốt nghiệp": [],
+    "Bảo lưu": [
+      "Đang học",
+      "Bảo lưu",
+      "Đã tốt nghiệp",
+      "Đình chỉ học tập"
+    ],
+    "Đã hoàn thành chương trình, chờ xét tốt nghiệp": [
+      "Đã tốt nghiệp",
+      "Bảo lưu"
+    ],
+    "Tình trạng khác": [
+      "Đang học",
+      "Bảo lưu",
+      "Đã tốt nghiệp",
+      "Đình chỉ học tập",
+      "Đã hoàn thành chương trình, chờ xét tốt nghiệp",
+      "Tình trạng khác"
+    ],
+    "Đình chỉ học tập": [
+      "Đang học",
+      "Bảo lưu",
+      "Đã tốt nghiệp",
+      "Đình chỉ học tập"
+    ]
   },
   "deleteStudentTimeLimit": 1800,
   "enableRules": true

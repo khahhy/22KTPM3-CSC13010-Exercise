@@ -101,12 +101,14 @@ function updateStudent(req, res) {
     students = students.map(student => {
         if (student.mssv === mssv) {
             found = true;
+            console.log("Email cập nhật:", updatedStudent.email);
+console.log("Domain email hợp lệ:", settings.allowedEmailDomain);
+console.log("Kiểm tra endsWith:", updatedStudent.email?.endsWith(settings.allowedEmailDomain));
 
-            if (!updatedStudent.email.endsWith(settings.allowedEmailDomain)) {
+            if (!updatedStudent.email.trim().endsWith(settings.allowedEmailDomain)) {
                 logger.warn(`Cập nhật thất bại: Email không hợp lệ (${updatedStudent.email})`);
                 return res.status(400).json({ message: "Email không hợp lệ" });
-            }
-        
+            }            
             
             const isValidPhone = settings.allowedPhonePatterns.some(pattern => 
                 new RegExp(pattern).test(updatedStudent.phone)
